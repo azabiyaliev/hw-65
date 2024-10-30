@@ -1,18 +1,25 @@
-import NavBar from './components/NavBar/NavBar.tsx';
-import { Container } from '@mui/material';
 import { Route, Routes } from 'react-router-dom';
 import Home from './containers/Home/Home.tsx';
+import Typography from '@mui/material/Typography';
+import NavBar from './components/NavBar/NavBar.tsx';
+import { Container } from '@mui/joy';
 
 const App = () => {
 
   return (
     <>
       <header>
-        <NavBar />
+        <NavBar/>
       </header>
       <Container maxWidth="xl">
         <Routes>
           <Route path="/" element={<Home/>}/>
+          <Route path="/pages" element={<Home/>}/>
+          <Route path="/pages/:pageName" element={<Home/>}/>
+          <Route
+            path="*"
+            element={<Typography variant="h3">Not found</Typography>}
+          />
         </Routes>
       </Container>
     </>

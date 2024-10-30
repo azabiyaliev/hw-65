@@ -2,22 +2,25 @@ import { useCallback, useEffect, useState } from 'react';
 import { IPages, IPagesAPI } from '../../types';
 import axiosAPI from '../../axiosAPI.ts';
 import Loader from '../../components/UI/Loader/Loader.tsx';
-import { NavLink } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Grid } from "@mui/joy";
-import { Card, CardActions, CardContent } from '@mui/material';
+import { Card, CardContent } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 
 
 const Home = () => {
   const [pages, setPages] = useState<IPages[]>([]);
   const [loading, setLoading] = useState(false);
+  const {pageName} = useParams();
+  console.log(pageName);
 
   const fetchData = useCallback(async () => {
 
     try {
       setLoading(true);
-      const response: { data: IPagesAPI } = await axiosAPI<IPagesAPI>("pages.json");
+      const response = await axiosAPI.get<IPagesAPI>(
+        !pageName ? 'pages.json' : `/pages.json?orderBy="title"&equalTo="${pageName}"`);
+
       if (response.data) {
         const pagesFromAPI = Object.keys(response.data).map((pageKey) => {
           return {
@@ -26,30 +29,31 @@ const Home = () => {
           };
         });
         setPages(pagesFromAPI);
-        console.log(response.data);
+        console.log(pagesFromAPI);
       }
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [pageName]);
+  console.log(pages);
 
   useEffect(() => {
     void fetchData();
   }, [fetchData]);
 
-  console.log(pages);
 
   return (
     <>
       {loading ? (<Loader/>) : (<div className="d-flex">
           <div>
             <div> {pages.length === 0 ? (
-              <p className="text-center fs-1">No quotes</p>
+              <p style={{textAlign: "center"}}>Page empty</p>
             ) : (
               <Grid container spacing={2}>
                 {pages.map((page) => (
+
                   <Grid sx={{mx: "auto"}} xs={8} key={page.id}>
                     <Card sx={{boxShadow: 10, minWidth: 300 }}>
                       <CardContent sx={{alignSelf: "center"}}>
@@ -64,20 +68,6 @@ const Home = () => {
                           {`${page.content}`}
                         </Typography>
                       </CardContent>
-                      <CardActions>
-                        <Button
-                          to={`/quotes/${page.id}/edit`}
-                          size="small"
-                          component={NavLink}
-                        >
-                          Refactor
-                        </Button>
-                        <Button
-                          size="small"
-                        >
-                          Delete
-                        </Button>
-                      </CardActions>
                     </Card>
                   </Grid>
                 ))}
