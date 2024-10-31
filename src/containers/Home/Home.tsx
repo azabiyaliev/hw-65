@@ -18,7 +18,7 @@ const Home = () => {
     try {
       setLoading(true);
       const response = await axiosAPI.get<IPagesAPI>(
-        !pageName ? 'pages.json' : `/pages.json?orderBy="title"&equalTo="${pageName}"`);
+        !pageName ? 'pages.json' : `/pages.json?orderBy="page"&equalTo="${pageName}"`);
 
       if (response.data) {
         const pagesFromAPI = Object.keys(response.data).map((pageKey) => {
@@ -51,7 +51,7 @@ const Home = () => {
               <Grid container spacing={2}>
                 {pages.map((page) => (
 
-                  <Grid sx={{mx: "auto"}} xs={8} key={page.id}>
+                  <Grid sx={{mx: "auto"}} xs={10} key={page.page}>
                     <Card sx={{boxShadow: 10, minWidth: 300 }}>
                       <CardContent sx={{alignSelf: "center"}}>
                         <Typography
@@ -62,7 +62,7 @@ const Home = () => {
                         <Typography
                           sx={{fontSize: 30, ms: 0, ps: 0}}
                           variant="body2">
-                          {`${page.content}`}
+                          {`Content: ${page.content}`}
                         </Typography>
                       </CardContent>
                     </Card>

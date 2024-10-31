@@ -1,10 +1,5 @@
-export interface IPagesForm {
-  title: string;
-  content: string;
-}
-
 export interface IPages {
-  id: string;
+  page: string;
   title: string;
   content: string;
 }
