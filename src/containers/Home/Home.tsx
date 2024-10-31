@@ -12,7 +12,6 @@ const Home = () => {
   const [pages, setPages] = useState<IPages[]>([]);
   const [loading, setLoading] = useState(false);
   const {pageName} = useParams();
-  console.log(pageName);
 
   const fetchData = useCallback(async () => {
 
@@ -29,7 +28,6 @@ const Home = () => {
           };
         });
         setPages(pagesFromAPI);
-        console.log(pagesFromAPI);
       }
     } catch (e) {
       console.error(e);
@@ -37,7 +35,6 @@ const Home = () => {
       setLoading(false);
     }
   }, [pageName]);
-  console.log(pages);
 
   useEffect(() => {
     void fetchData();
